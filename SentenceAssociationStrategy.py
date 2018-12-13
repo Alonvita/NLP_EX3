@@ -3,6 +3,42 @@ import AssociationStrategy
 
 class SentenceAssociationStrategy(AssociationStrategy):
     def __init__(self):
-        super.__init__()
+        super(AssociationStrategy, self).__init__(self)
 
     def init_count_data_structures(self, fp, context_type):
+        print("Initializing count data-structs for Sentence Association")
+
+        with open(fp, 'r') as file_f:
+            # set sentence to an empty set
+            sentence = set()
+
+            # open file
+            for line in file_f:
+                # split line
+                split_line = line.split()
+                # check if end of file reached
+                if len(split_line) == 0:
+                    for word in sentence:
+                        dif = sentence.difference({word})  # make a difference of the sentence - word
+                        self._targets_count[word] += len(dif)  # add the length to the targets count
+                        for context in dif:
+                            self._pair_count_dict[word][context] += 1
+                        sentence.clear()  # clear the sentence
+                else:
+                    if split_line[4] in context_type: # check if the word is of valid context
+                        lemma = split_line[2]
+                        if lemma not in self._word_mapper:
+                            # map the new registry for the word
+                            self._map_words[lemma] = len(self._map_words)
+                        sentence.add(self._map_words[lemma])  # add to sentence
+
+            # file did not end with empty lines
+            if len(sentence) > 0:
+                for word in sentence:
+                    dif = sentence.difference({word})
+                    self._targets_count[word] += len(dif)
+                    for context in dif:
+                        self._pair_count_dict[word][context] += 1
+                    sentence.clear()
+
+            print("Done counting...")
