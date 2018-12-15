@@ -31,17 +31,19 @@ class Association:
         print ('Filtering uncommon target words.')
         # Local Variables
         ass_type = self.association_type
+        target_count = ass_type.get_target_count()
+        pair_count_dict = ass_type.get_pair_count_dict()
 
-        for word_id in ass_type.get_target_count().keys():
-            if ass_type.get_target_count()[word_id] < THRESHOLD and word_id in ass_type.get_pair_count_dict():
-                del ass_type.get_pair_count_dict()[word_id]
+        for word_id in target_count.keys():
+            if target_count[word_id] < THRESHOLD and word_id in pair_count_dict:
+                del pair_count_dict[word_id]
             else:
                 # counting: #(*,att) after filtering
-                for feature in ass_type.get_pair_count_dict()[word_id]:
-                    ass_type.get_features_count()[feature] += ass_type.get_pair_count_dict()[word_id][feature]
+                for feature in pair_count_dict[word_id]:
+                    ass_type.set_features_count_at(feature, pair_count_dict[word_id][feature])
 
                 # counting #(*,*)
-                ass_type.add_words_count(ass_type.get_target_count()[word_id])
+                ass_type.add_words_count(target_count[word_id])
 
         print ('Filtering is Done.')
 
@@ -51,10 +53,11 @@ class Association:
             return the word id from the words map, or False if doesn't exist.
         """
         # Local Variables
-        ass_type = self.association_type
+        association = self.association_type
+        words_map = association.get_words_map()
 
-        if word in ass_type.word_mapper:
-            return ass_type.word_mapper[word]
+        if word in words_map:
+            return words_map[word]
         else:
             return False
 
@@ -63,7 +66,7 @@ class Association:
             get_all_common_targets_ids(self).
             return all of the word's filtered.
         """
-        commons = self.association_type.pair_counts.keys()
+        commons = self.association_type.get_pair_count_dict().keys()
         return commons
 
     def get_word_from_id(self, word_id):
@@ -71,8 +74,10 @@ class Association:
             get_word_from_id(self, word_id).
             self explanatory.
         """
-        strategy = self.association_type
-        return strategy.word_mapper.keys()[strategy.word_mapper.values().index(word_id)]
+        association = self.association_type
+        words_map = association.get_words_map()
+
+        return words_map.keys()[words_map.values().index(word_id)]
 
     def get_target_count(self, target_id):
         """
@@ -114,8 +119,7 @@ class Association:
         return the features count for a given id (0 if doesn't exist).
     """
     def get_feature_count(self, feature_id):
-        ass_type = self.association_type  # (*, feature)
-        features_count = ass_type.get_features_count()
+        features_count = self.get_features_count_struct()
 
         if feature_id in features_count:
             return features_count[feature_id]
@@ -184,7 +188,7 @@ class Association:
         """
         return self.association_type.get_pair_count_dict()
 
-    def get_features_count(self):
+    def get_features_count_struct(self):
         """
             get_features_count(self).
         """

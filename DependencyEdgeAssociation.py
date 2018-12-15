@@ -39,7 +39,7 @@ class DependencyEdgeAssociation(IAssociationType):
     def get_lemma_id(self, lemma):
         """
             get_lemma_id(self, lemma).
-            get the lemma ID for a given lema.
+            get the lemma ID for a given lemma.
         """
         if lemma not in self._words_map:
             # map the word to a number that represents its id
