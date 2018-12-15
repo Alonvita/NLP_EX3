@@ -42,21 +42,3 @@ class SentenceAssociation(IAssociationType):
                 sentence.clear()
 
             print("Done counting...")
-
-    def get_words_count(self):
-        return self._words_count
-
-    def get_words_map(self):
-        return self._words_map
-
-    def get_target_count(self):
-        return self._targets_count
-
-    def get_features_count(self):
-        return self._features_count
-
-    def get_pair_count_dict(self):
-        return self._pair_count_dict
-
-    def add_words_count(self, count):
-        self._words_count += count

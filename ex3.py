@@ -12,8 +12,8 @@ if __name__ == '__main__':
 
     test_file = "wikipedia.sample.trees.lemmatized"
 
-    index = 1
+    index = 2
     to_test = True
 
-    associator = factory.make_association_for_index(index, test_file)
+    associator = factory.make_association_for_index(index, test_file, 3)
 
