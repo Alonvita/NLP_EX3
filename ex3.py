@@ -1,16 +1,19 @@
 import sys
 from time import time
 
-from AssociationStrategyFactory import AssociationStrategyFactory
+from AssociationTypeFactory import AssociationTypeFactory
 
 if __name__ == '__main__':
     print 'start'
     t = time()
 
     # initialize factory
-    factory = AssociationStrategyFactory()
+    factory = AssociationTypeFactory()
 
-    part = 3
+    test_file = "wikipedia.sample.trees.lemmatized"
+
+    index = 1
     to_test = True
 
-    associator = factory.make_association_to_part(part, sys.argv[1])
+    associator = factory.make_association_for_index(index, test_file)
+
