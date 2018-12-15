@@ -14,11 +14,11 @@ class AssociationTypeFactory:
             DependencyEdgeAssociation,  # Dependency Edge association as [2]
         ]
 
-    """
-        make_association_to_part(self, index, filename).
-        makes the association or returns false.
-    """
     def make_association_for_index(self, index, filename, arg=None):
+        """
+            make_association_to_part(self, index, filename).
+            makes the association or returns false.
+        """
         if 1 <= index <= 3:
             return Association(self._strategy[index - 1], filename, arg)
 

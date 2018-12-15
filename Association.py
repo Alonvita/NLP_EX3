@@ -45,11 +45,11 @@ class Association:
 
         print ('Filtering is Done.')
 
-    """
-        get_word_id(self, word).
-        return the word id from the words map, or False if doesn't exist.
-    """
     def get_word_id(self, word):
+        """
+            get_word_id(self, word).
+            return the word id from the words map, or False if doesn't exist.
+        """
         # Local Variables
         ass_type = self.association_type
 
@@ -58,52 +58,55 @@ class Association:
         else:
             return False
 
-    """
-        get_all_common_targets_ids(self).
-        return all of the word's filtered.
-    """
     def get_all_common_targets_ids(self):
+        """
+            get_all_common_targets_ids(self).
+            return all of the word's filtered.
+        """
         commons = self.association_type.pair_counts.keys()
         return commons
 
-    """
-        get_word_from_id(self, word_id).
-        self explanatory.
-    """
     def get_word_from_id(self, word_id):
+        """
+            get_word_from_id(self, word_id).
+            self explanatory.
+        """
         strategy = self.association_type
         return strategy.word_mapper.keys()[strategy.word_mapper.values().index(word_id)]
 
-    """
-        get_target_count(self, target_id).
-        return the target's count for a given id (0 if doesn't exist).
-    """
     def get_target_count(self, target_id):
+        """
+            get_target_count(self, target_id).
+            return the target's count for a given id (0 if doesn't exist).
+        """
         # Local Variables
         ass_type = self.association_type  # (word, *) or 0
+        targets_count = ass_type.get_target_count()
 
         # check if id exists in the words count
-        if target_id in ass_type.targets_count:
-            return ass_type.targets_count[target_id]  # if so, get the count for it
+        if target_id in targets_count:
+            return targets_count[target_id]  # if so, get the count for it
         return 0
 
-    """
-        get_pair_count(self, target_id, feature_id).
-        return the pairs count for a given id (0 if doesn't exist).
-    """
     def get_pair_count(self, target_id, feature_id):
+        """
+            get_pair_count(self, target_id, feature_id).
+            return the pairs count for a given id (0 if doesn't exist).
+        """
         # Local Variables
         ass_type = self.association_type  # (word, feature)
-        if target_id in ass_type.pair_counts and feature_id in ass_type.pair_counts[target_id]:
-            return ass_type.pair_counts[target_id][feature_id]
+        pair_count_dict = ass_type.get_pair_count_dict()
+
+        if target_id in pair_count_dict and feature_id in pair_count_dict[target_id]:
+            return pair_count_dict[target_id][feature_id]
         return 0
 
-    """
-        get_total_count(self).
-        get the words count for this association type.
-    """
     def get_total_count(self):
-        """ #(*,*) """
+        """
+            get_total_count(self).
+            get the words count for this association type.
+            #(*,*)
+        """
         return self.association_type.get_words_count()
 
     """
@@ -112,35 +115,37 @@ class Association:
     """
     def get_feature_count(self, feature_id):
         ass_type = self.association_type  # (*, feature)
+        features_count = ass_type.get_features_count()
 
-        if feature_id in ass_type.features_count:
-            return ass_type.features_count[feature_id]
+        if feature_id in features_count:
+            return features_count[feature_id]
         return 0
 
-    """
-        get_features_for(self, target_id).
-        return all of the features for a given ID, or an empty dict.
-    """
     def get_features_for(self, target_id):
+        """
+            get_features_for(self, target_id).
+            return all of the features for a given ID, or an empty dict.
+        """
         # Local Variables
         ass_type = self.association_type
+        pair_count_dict = ass_type.get_pair_count_dict()
 
-        if target_id in ass_type.pair_counts:
-            return map(lambda x: x[0], ass_type.pair_counts[target_id].most_common(FEATURES_PER_WORD))
+        if target_id in pair_count_dict:
+            return map(lambda x: x[0], pair_count_dict[target_id].most_common(FEATURES_PER_WORD))
         else:
             return {}
 
-    """
-        clean_association(self).
-    """
     def clean_association(self):
+        """
+            clean_association(self).
+        """
         self.association_type.clean_mem()
 
-    """
-        recover_file(self).
-        :return a dictionary of words taken from attributes
-    """
     def recover_file(self):
+        """
+            recover_file(self).
+            :return a dictionary of words taken from attributes
+        """
         t = time()
         att_to_word = defaultdict(list)
 
@@ -156,31 +161,31 @@ class Association:
         print 'time for recover-file:', time() - t
         return att_to_word
 
-    """
-        test(self).
-    """
     def test(self):
+        """
+            test(self).
+        """
         # Local Variables
         ass_type = self.association_type
-        pair_counts = ass_type.get_pair_count_dict()
+        pair_count_dict = ass_type.get_pair_count_dict()
         targets_count = ass_type.get_target_count()
 
-        for word_id in pair_counts.keys():
-            if len(list(pair_counts[word_id].elements())) != targets_count[word_id]:
+        for word_id in pair_count_dict.keys():
+            if len(list(pair_count_dict[word_id].elements())) != targets_count[word_id]:
                 print ('---')
                 print (self.get_word_from_id(word_id))
-                print (pair_counts[word_id])
-                print (len(list(pair_counts[word_id].elements())))
+                print (pair_count_dict[word_id])
+                print (len(list(pair_count_dict[word_id].elements())))
                 print (targets_count[word_id])
 
-    """
-        get_structure_pair_counts(self).
-    """
     def get_association_pair_dict(self):
+        """
+            get_structure_pair_counts(self).
+        """
         return self.association_type.get_pair_count_dict()
 
-    """
-        get_features_count(self).
-    """
     def get_features_count(self):
+        """
+            get_features_count(self).
+        """
         return self.association_type.get_features_count()

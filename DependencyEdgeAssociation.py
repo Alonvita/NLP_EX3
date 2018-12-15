@@ -36,21 +36,20 @@ class DependencyEdgeAssociation(IAssociationType):
 
         print ('Done Counting.')
 
-    """
-        get_lemma_id(self, lemma).
-        get the lemma ID for a given lema.
-    """
     def get_lemma_id(self, lemma):
+        """
+            get_lemma_id(self, lemma).
+            get the lemma ID for a given lema.
+        """
         if lemma not in self._words_map:
             # map the word to a number that represents its id
             self._words_map[lemma] = len(self._words_map)
         return self._words_map[lemma]
 
-    """
-        give_sentence_features(self, sentence, preposition).
-        
-    """
     def give_sentence_features(self, sentence, preposition):
+        """
+            give_sentence_features(self, sentence, preposition).
+        """
         # tree = Node.buildSentenceTree(sentence)
         for tup in sentence:  # tup == (head_id, word, tag)
             if tup[HEAD] > 0 and tup[TAG] not in preposition:  # skip on root and for words that not context_type (==-1)
