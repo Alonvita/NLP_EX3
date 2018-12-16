@@ -47,18 +47,21 @@ if __name__ == '__main__':
     # initialize factory
     factory = AssociationTypeFactory()
 
-    test_file = "wikipedia.sample.trees.lemmatized"
+    if len(sys.argv) == 1:
+        fp = "wiki_sample"
+    else:
+        fp = sys.argv[1]
 
     index = 3
     init_testing = False
 
     try:
-        association = factory.make_association_for_index(index, test_file)
+        association = factory.make_association_for_index(index, fp)
     except NotImplementedError:
         print (""
                "Associations types are: \n\t"
                "1. Sentence\n\t"
-               "2. Window\n\t"
+               "2. Bag of Words\n\t"
                "3. Dependency Edge\n"
                "Please enter an index in the given range: 1-3")
         exit(-1)
@@ -73,4 +76,4 @@ if __name__ == '__main__':
     write_first_order_to_file(index, vec_builder)
     vec_builder.find_similarities(TARGET_WORDS, 'result_part' + str(index) + ".txt")
 
-    print("Done.")
+    print 'time: ', time() - t

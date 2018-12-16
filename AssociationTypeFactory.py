@@ -1,5 +1,5 @@
 from Association import Association
-from WindowAssociation import WindowAssociation
+from BagOfWordsAssociation import WindowAssociation
 from SentenceAssociation import SentenceAssociation
 from DependencyEdgeAssociation import DependencyEdgeAssociation
 
